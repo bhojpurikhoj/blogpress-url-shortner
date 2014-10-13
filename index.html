@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="index.php : ">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>index.php</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/bhojpurikhoj/blogpress-url-shortner">View on GitHub</a>
+
+          <h1 id="project_title">index.php</h1>
+          <h2 id="project_tagline"></h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/bhojpurikhoj/blogpress-url-shortner/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/bhojpurikhoj/blogpress-url-shortner/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>&lt;?php
+include 'library.php';
+?&gt;&lt;?php 
+$filename = 'blogpress/version.php';
+if (!file_exists($filename)) { 
+echo "<a href="install/index.php">It seems to be script is not installed.</a>";
+die();
+}
+//include database connection details
+include('blogpress/config.php');</p>
+
+<p>//redirect to real link if URL is set
+if (!empty($_GET['url'])) {
+    $redirect = mysql_fetch_assoc(mysql_query("SELECT url_link FROM urls WHERE url_short = '".addslashes($_GET['url'])."'"));
+    $redirect = "http://".str_replace("http://","",$redirect[url_link]);
+    header('HTTP/1.1 301 Moved Permanently');<br>
+    header("Location: ".$redirect);<br>
+}
+//</p>
+
+<p>//insert new url
+if ($_POST['url']) {</p>
+
+<p>//get random string for URL and add http:// if not already there
+$short = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 5);</p>
+
+<p>mysql_query("INSERT INTO urls (url_link, url_short, url_ip, url_date) VALUES</p>
+
+<pre><code>(
+'".addslashes($_POST['url'])."',
+'".$short."',
+'".$_SERVER['REMOTE_ADDR']."',
+'".time()."'
+)
+</code></pre>
+
+<p>");</p>
+
+<p>$redirect = "&amp;bp-key=$short";
+header('Location: '.$redirect); die;</p>
+
+<p>}</p>
+
+<p>?&gt;
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "<a href="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd%22%3E">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</a>
+
+</p>
+
+&lt;?php echo $lang["title"]; ?&gt;
+  
+
+
+<p></p>
+<div>
+    <table width="80%" align="center" border="0">
+      <tr>
+        <td align="center">
+          <img src="blogpress/css/logo.png"><br><br>
+          &lt;?php echo $lang["longurl"]; ?&gt;</td>
+      </tr>
+    </table>
+
+
+Changed your language
+English - Global
+Hindi - India
+Bhojpuri - India
+
+  
+  " id="incinput"&gt;
+
+
+<p>&lt;?php if (!empty($_GET['bp-key'])) { ?&gt;
+<br>
+</p>
+
+<h2>
+<a name="url" class="anchor" href="#url"><span class="octicon octicon-link"></span></a>
+<?php echo $lang["output"]; ?><a href="&lt;?php%20echo%20%24server_name;%20?&gt;url/&lt;?php%20echo%20%24_GET%5B'bp-key'%5D;%20?&gt;" target="_blank"><?php echo $server_name; ?>url/<?php echo $_GET['bp-key']; ?></a>
+</h2>
+
+<p></p>
+</div>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">index.php maintained by <a href="https://github.com/bhojpurikhoj">bhojpurikhoj</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
